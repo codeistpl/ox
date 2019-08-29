@@ -11,6 +11,9 @@ void Backend::set(unsigned col, unsigned row, State s) {
   if ((currentPlayer == Player::One && s == State::O) ||
       (currentPlayer == Player::Two && s == State::X)) {
     chart.set(col, row, s);
+    if (haveWin()) {
+      scoreCurrentPlayer();
+    }
     switchPlayer();
   }
 }
@@ -41,6 +44,8 @@ void Backend::clear() {
   chart.clear();
   currentPlayer = Player::One;
 }
+
+unsigned Backend::getScore(Player p) { return score.at(p); }
 
 bool Backend::haveWinColumn(unsigned col) const {
 
@@ -77,5 +82,7 @@ bool Backend::haveWinDiag() const {
   }
   return diag || revDiag;
 }
+
+void Backend::scoreCurrentPlayer() { score[currentPlayer]++; }
 
 } // namespace ox

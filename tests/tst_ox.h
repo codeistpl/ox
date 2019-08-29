@@ -12,6 +12,7 @@ public:
   ~TestOX() = default;
   void testWinningCollumn(unsigned col);
   void testWinningRow(unsigned col);
+  void Wins(State s);
 
 protected:
   Backend b;
@@ -70,6 +71,29 @@ TEST_F(TestOX, have_winning_reverse_diagonal) {
   b.set(0, 1, State::X);
   b.set(2, 0, State::O);
   EXPECT_TRUE(b.haveWin());
+}
+
+void TestOX::Wins(State s) {
+  auto xs = s == State::O ? State::X : State::O;
+  if (s == State::X)
+    b.set(2, 2, xs);
+  b.set(0, 2, s);
+  b.set(1, 0, xs);
+  b.set(1, 1, s);
+  b.set(0, 1, xs);
+  b.set(2, 0, s);
+}
+
+TEST_F(TestOX, scoring) {
+  b.clear();
+  Wins(State::O);
+  EXPECT_TRUE(b.haveWin());
+  EXPECT_EQ(unsigned(1), b.getScore(Player::One));
+  EXPECT_EQ(unsigned(0), b.getScore(Player::Two));
+  b.clear();
+  Wins(State::X);
+  EXPECT_TRUE(b.haveWin());
+  EXPECT_EQ(unsigned(1), b.getScore(Player::Two));
 }
 
 void TestOX::testWinningCollumn(unsigned col) {
