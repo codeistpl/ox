@@ -18,6 +18,8 @@ public:
   bool haveWin() const;
   void clear();
   unsigned getScore(Player p);
+  Player getCurrentPlayer() const;
+  std::vector<State> getData() const;
 
 private:
   bool haveWinColumn(unsigned col) const;

@@ -3,11 +3,14 @@ import QtQuick 2.0
 MouseArea{
     width: parent.width/3
     height: parent.height/3
-    property int  no: 0
+    property int  row: 0
+    property int col: 0
     property bool set : false
     function setX(){canvas.paintX()}
     function setO(){canvas.paintO()}
     function clear(){canvas.clear()}
+
+    onClicked: {console.log("clicked ", col, " ", row)}
 
     Canvas{
         id:canvas

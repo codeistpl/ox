@@ -47,6 +47,10 @@ void Backend::clear() {
 
 unsigned Backend::getScore(Player p) { return score.at(p); }
 
+Player Backend::getCurrentPlayer() const { return currentPlayer; }
+
+std::vector<State> Backend::getData() const { return chart.getData(); }
+
 bool Backend::haveWinColumn(unsigned col) const {
 
   for (unsigned row = 1; row < chart.getWidth(); row++) {

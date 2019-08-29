@@ -20,6 +20,7 @@ public:
     chart.at(col * width + row) = val;
   }
   void clear() { std::fill(chart.begin(), chart.end(), T()); }
+  std::vector<T> getData() const { return chart; }
 
 private:
   unsigned width = 0;
