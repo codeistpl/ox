@@ -30,14 +30,20 @@ void Backend::switchPlayer() {
   }
 }
 
-bool Backend::haveWin() const {
+std::optional<Win> Backend::haveWin() const {
   for (unsigned x = 0; x < chart.getWidth(); x++) {
     if (haveWinColumn(x))
-      return true;
+      return Win{WinType::Column, x};
     if (haveWinRow(x))
-      return true;
+      return Win{WinType::Row, x};
   }
-  return haveWinDiag();
+  if (haveWinDiag())
+    return Win{WinType::Diagonal};
+
+  if (haveWinRevDiag())
+    return Win{WinType::RewDiagonal};
+
+  return std::nullopt;
 }
 
 void Backend::clear() {
@@ -51,17 +57,7 @@ Player Backend::getCurrentPlayer() const { return currentPlayer; }
 
 std::vector<State> Backend::getData() const { return chart.getData(); }
 
-bool Backend::haveWinColumn(unsigned col) const {
-
-  for (unsigned row = 1; row < chart.getWidth(); row++) {
-    if (chart.get(col, 0) == State::Empty ||
-        chart.get(col, 0) != chart.get(col, row))
-      return false;
-  }
-  return true;
-}
-
-bool Backend::haveWinRow(unsigned row) const {
+bool Backend::haveWinColumn(unsigned row) const {
   for (unsigned col = 1; col < chart.getWidth(); col++) {
     if (chart.get(0, row) == State::Empty ||
         chart.get(0, row) != chart.get(col, row))
@@ -70,21 +66,31 @@ bool Backend::haveWinRow(unsigned row) const {
   return true;
 }
 
+bool Backend::haveWinRow(unsigned col) const {
+  for (unsigned row = 1; row < chart.getWidth(); row++) {
+    if (chart.get(col, 0) == State::Empty ||
+        chart.get(col, 0) != chart.get(col, row))
+      return false;
+  }
+  return true;
+}
+
 bool Backend::haveWinDiag() const {
-  bool diag = true;
   for (unsigned x = 1; x < chart.getWidth(); x++) {
     if (chart.get(0, 0) == State::Empty || chart.get(0, 0) != chart.get(x, x))
-      diag = false;
+      return false;
   }
+  return true;
+}
 
-  bool revDiag = true;
+bool Backend::haveWinRevDiag() const {
   unsigned max = chart.getWidth() - 1;
   for (unsigned x = 1; x < chart.getWidth(); x++) {
     if (chart.get(max, 0) == State::Empty ||
         chart.get(max, 0) != chart.get(max - x, x))
-      revDiag = false;
+      return false;
   }
-  return diag || revDiag;
+  return true;
 }
 
 void Backend::scoreCurrentPlayer() { score[currentPlayer]++; }

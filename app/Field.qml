@@ -10,8 +10,6 @@ MouseArea{
     function setO(){canvas.paintO()}
     function clear(){canvas.clear()}
 
-    onClicked: {console.log("clicked ", col, " ", row)}
-
     Canvas{
         id:canvas
         anchors.fill:parent

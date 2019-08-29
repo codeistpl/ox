@@ -8,6 +8,7 @@ QT       -= core gui
 
 TARGET = backend
 TEMPLATE = lib
+CONFIG += c++17
 
 DEFINES += BACKEND_LIBRARY
 

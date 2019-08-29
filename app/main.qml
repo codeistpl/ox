@@ -4,25 +4,48 @@ import QtQuick.Controls 2.12
 import me.ox.gameadapter 1.0
 
 Window {
+    id:ox
     visible: true
     width: 640
     height: 480
     title: qsTr("OX")
+    property var ids : [f00,f01,f02,f10,f11,f12,f20,f21,f22];
+    property var player: 1
+    property int scoreP1 : 0
+    property int scoreP2: 0
 
     GameAdapter{
         id: backend
         onDataChanged: {
-            console.log("dataChanged", data)
-            var ids = [f00,f01,f02,f10,f11,f12,f20,f21,f22];
-
             for (var i=0; i<9; i++){
                 if (data[i] === 1){
                     ids[i].setX();
                 }else if(data[i] === 2){
                     ids[i].setO();
+                }else{
+                    ids[i].clear();
                 }
             }
         }
+        onPlayerChanged: {
+            ox.player = player
+        }
+
+        onScoreChanged: {
+            ox.scoreP1 = scoreP1;
+            ox.scoreP2 = scoreP2;
+        }
+        onColumnWin:{
+            background.paintWinningCollumn(idx);
+        }
+        onRowWin: {
+            background.paintWinningRow(idx);
+        }
+        onDiagonalWin: {
+            background.paintWinningSlash(0)
+        }
+        onRevDiagonalWin:
+            background.paintWinningSlash(1);
     }
 
 
@@ -42,23 +65,27 @@ Window {
             Text {
                 id: p1Label
                 text: qsTr("Player One:")
-                color: "red"
+                color: ox.player === 1 ? "green" : "black"
             }
             Text {
-                text: "0"
+                text: ox.scoreP1
                 color: p1Label.color
             }
             Text{
+                id:p2Label
                 text: qsTr("Player Two:")
+                color: ox.player === 2 ? "red" : "black"
             }
             Text {
-                text: "0"
+                text: ox.scoreP2
+                color: p2Label.color
             }
         }
 
         Button{
             anchors.centerIn: parent
             text: qsTr("Clear")
+            onClicked: {backend.clear(); background.clear()}
         }
 
     }
@@ -77,7 +104,6 @@ Window {
         }
 
         function drawWin(){
-            console.log("have a winner!")
             let col = game.getWinCollumnt();
             if (col > -1 ){
                 background.paintWinningCollumn(col);

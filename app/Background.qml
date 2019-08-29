@@ -7,6 +7,7 @@ Canvas{
     property int h: height
 
     function paintWinningCollumn(col){
+        console.log("paint col", col)
         var ctx = getContext("2d")
         ctx.lineWidth = 5
         ctx.strokeStyle = "magenta"
@@ -27,6 +28,13 @@ Canvas{
         ctx.lineTo(w, h/6 + (col * h/3) )
         ctx.stroke()
         ctx.closePath()
+        requestPaint()
+    }
+
+    function clear(){
+        var ctx = getContext("2d")
+        ctx.reset()
+        ctx.clearRect(width, height);
         requestPaint()
     }
 
