@@ -9,7 +9,7 @@ using namespace ox;
 class TestOX : public ::testing::Test {
 public:
   TestOX() = default;
-  ~TestOX() = default;
+  ~TestOX() {}
   void testWinningCollumn(unsigned col);
   void testWinningRow(unsigned col);
   void Wins(State s);
